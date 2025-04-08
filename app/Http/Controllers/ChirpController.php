@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Request\UpdateChirpRequest;
 use App\Models\Chirp;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 
 class ChirpController extends Controller
 {
@@ -36,15 +37,11 @@ class ChirpController extends Controller
         ]);
     }
 
-    public function update(Request $request, Chirp $chirp): RedirectResponse
+    public function update(UpdateChirpRequest $request, Chirp $chirp): RedirectResponse
     {
         $this->authorize('update', $chirp);
 
-        $validated = $request->validate([
-            'message' => 'required|string|max:255',
-        ]);
-
-        $chirp->update($validated);
+        $chirp->update($request);
 
         return redirect(route('chirps.index'));
     }
